@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node -r ts-node/register ./src/main.ts",
     "_build:ts": "tsc",
-    "_build:pkg:linux": "pkg -t latest-linux-armv7 ./ --output dist/pi-maintainer",
+    "_build:pkg:linux": "pkg -t node12.2.0-linux-armv7 ./ --output dist/pi-maintainer",
     "_build:pkg:win": "pkg -t latest-win-x64 ./ --output dist/pi-maintainer.exe",
     "build:linux": "run-s _build:ts _build:pkg:linux",
     "build:win": "run-s _build:ts _build:pkg:win"

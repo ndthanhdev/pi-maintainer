@@ -3,6 +3,7 @@ import publicIp from "public-ip";
 import { createLogger } from "../logger";
 
 let lastIp = "";
+let nextPush = 0;
 
 const syncIpLog = createLogger("syncIP");
 
@@ -13,11 +14,21 @@ async function shouldSync() {
     const curIp = await publicIp.v4();
     log.info(`lastIp: ${lastIp}`);
     log.info(`curIp: ${curIp}`);
-    if (curIp === lastIp) {
-      return false;
+
+    if (curIp !== lastIp) {
+      log.verbose(
+        `update cause curIP(${curIp}) doesn't match lastIP(${lastIp})`
+      );
+      return curIp;
     }
 
-    return curIp;
+    const now = Date.now();
+    if (nextPush < now) {
+      log.verbose(`update cause nextPush(${nextPush}) < now(${now})`);
+      return curIp;
+    }
+
+    return false;
   } catch (error) {
     log.error(`failed. see error below`);
     log.error(error);
@@ -30,16 +41,23 @@ async function updateIp(domain: string, token: string, ip: string) {
   const log = syncIpLog.child(updateIp);
 
   const url = `https://duckdns.org/update/${domain}/${token}/${ip}`;
-  log.info(`update ip: ${url}`);
+  log.info(`update domain ${domain} 's ip to: ${ip}`);
 
   try {
     const r = await axios.get(url);
 
-    if (r.status >= 400) {
-      log.error(`update ip failed. status: ${r.status}`);
+    if (r.status >= 400 || r.data === "KO") {
+      log.error(`update ip failed.`);
+      log.error(`status: ${r.status}`);
+      log.error(`data: ${r.data}`);
     } else {
-      log.info(`update ip success: ${r.status}-${r.data}`);
+      log.info(`update ip success.`);
+      log.info(`status: ${r.status}`);
+      log.info(`data: ${r.data}`);
       lastIp = ip;
+      nextPush =
+        Date.now() + parseInt(process.env.SYNCIP_PUSH_FREQ || "3600000");
+      log.verbose(`next force push: ${nextPush}`);
     }
   } catch (error) {
     log.error(`update ip failed. See error below: `);
@@ -48,11 +66,12 @@ async function updateIp(domain: string, token: string, ip: string) {
 }
 
 const Domain = process.env.DOMAIN || "picute";
-const Token = process.env.TOKEN || "c78391dc-d66a-4472-aa38-06df8e2c9d41";
+const DuckToken = process.env.DUCK_TOKEN || "";
 
-export default () =>
-  shouldSync().then(newIp => {
+export default function syncIP() {
+  return shouldSync().then(newIp => {
     if (newIp) {
-      return updateIp(Domain, Token, newIp);
+      return updateIp(Domain, DuckToken, newIp);
     }
   });
+}

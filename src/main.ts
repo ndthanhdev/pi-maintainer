@@ -1,9 +1,12 @@
+const env = require("dotenv").config();
 import Koa from "koa";
 import { createLogger, setup as setupLogger, getLogAsHtml } from "./logger";
 import { setup as setupLooper } from "./looper";
 import debug from "debug";
 import Router from "koa-router";
-require('dotenv').config()
+
+const DefaultLogPattern = `*:info>*,*:warn>*,*:error>*`
+debug.enable(process.env.DEBUG || DefaultLogPattern);
 
 setupLogger();
 setupLooper();
@@ -13,7 +16,7 @@ const mainLog = createLogger("main");
 const app = new Koa();
 
 const router = new Router().get("/", ctx => {
-  const pattern = ctx.query.debug || "*";
+  const pattern = ctx.query.debug || DefaultLogPattern;
   mainLog.info(`enabling debug ${pattern}`);
   debug.enable(pattern);
 

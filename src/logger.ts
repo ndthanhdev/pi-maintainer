@@ -37,10 +37,10 @@ function _createLogger(fnOrPrefix: Function | string, parentPrefix?: string) {
   }
 
   return {
-    verbose: createInMemLog(`${prefix}:verbose`),
-    info: createInMemLog(`${prefix}:info`),
-    warn: createInMemLog(`${prefix}:warn`),
-    error: createInMemLog(`${prefix}:error`),
+    verbose: createInMemLog(`${prefix}:verbose>`),
+    info: createInMemLog(`${prefix}:info>`),
+    warn: createInMemLog(`${prefix}:warn>`),
+    error: createInMemLog(`${prefix}:error>`),
     child: (fnOrPrefix: Function | string) => _createLogger(fnOrPrefix, prefix)
   };
 }

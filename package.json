@@ -17,8 +17,7 @@
       "./node_modules/@types",
       "./node_modules/typescript/lib/*.d.ts",
       "src/**/*.ts",
-			"./tsconfig.json",
-			"./.env"
+			"./tsconfig.json"
     ]
   },
   "dependencies": {

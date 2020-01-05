@@ -3,6 +3,7 @@ import { createLogger, setup as setupLogger, getLogAsHtml } from "./logger";
 import { setup as setupLooper } from "./looper";
 import debug from "debug";
 import Router from "koa-router";
+require('dotenv').config()
 
 setupLogger();
 setupLooper();

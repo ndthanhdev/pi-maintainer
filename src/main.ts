@@ -1,11 +1,11 @@
-const env = require("dotenv").config();
+const env = require("dotenv").config({ path: process.argv[1] });
 import Koa from "koa";
 import { createLogger, setup as setupLogger, getLogAsHtml } from "./logger";
 import { setup as setupLooper } from "./looper";
 import debug from "debug";
 import Router from "koa-router";
 
-const DefaultLogPattern = `*:info>*,*:warn>*,*:error>*`
+const DefaultLogPattern = `*:info>*,*:warn>*,*:error>*`;
 debug.enable(process.env.DEBUG || DefaultLogPattern);
 
 setupLogger();

@@ -1,4 +1,4 @@
-const env = require("dotenv").config({ path: process.argv[1] });
+require("./setupEnv");
 import Koa from "koa";
 import { createLogger, setup as setupLogger, getLogAsHtml } from "./logger";
 import { setup as setupLooper } from "./looper";

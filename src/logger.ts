@@ -19,7 +19,7 @@ function forkLog(...logFn: LogFn[]) {
 }
 
 export function getLogAsHtml() {
-  return logLines.map(ansiToHtml).join("<br>\n");
+  return [...logLines].reverse().map(ansiToHtml).join("<br>\n");
 }
 
 function createInMemLog(prefix: string) {

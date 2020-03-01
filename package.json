@@ -6,9 +6,11 @@
   "scripts": {
     "start": "node -r ts-node/register ./src/main.ts",
     "_build:ts": "tsc",
-    "_build:pkg:linux": "pkg -t node12.2.0-linux-armv7 ./ --output dist/pi-maintainer",
+    "_build:pkg:linux:armv7": "pkg -t node12.2.0-linux-armv7 ./ --output dist/pi-maintainer",
+    "_build:pkg:linux:arm64": "pkg -t node12.2.0-linux-arm64 ./ --output dist/pi-maintainer",
     "_build:pkg:win": "pkg -t latest-win-x64 ./ --output dist/pi-maintainer.exe",
-    "build:linux": "run-s _build:ts _build:pkg:linux",
+    "build:linux:arm64": "run-s _build:ts _build:pkg:linux:arm64",
+    "build:linux:armv7": "run-s _build:ts _build:pkg:linux:armv7",
     "build:win": "run-s _build:ts _build:pkg:win"
   },
   "pkg": {
@@ -46,6 +48,7 @@
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",
-    "pkg": "^4.4.2"
+    "pkg": "^4.4.2",
+    "prettier": "^1.19.1"
   }
 }
